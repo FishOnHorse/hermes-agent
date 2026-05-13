@@ -400,6 +400,12 @@ DEFAULT_CONFIG = {
     "toolsets": ["hermes-cli"],
     "agent": {
         "max_turns": 90,
+        # Maximum output tokens for model responses.  When set, this value is
+        # passed to the API as max_tokens (or max_completion_tokens for newer
+        # OpenAI models).  If unset, the model/provider default is used.
+        # Increase this if you see "Response truncated due to output length limit".
+        # Example: 32768 for larger responses, 65536 for very long tool calls.
+        "max_tokens": None,
         # Inactivity timeout for gateway agent execution (seconds).
         # The agent can run indefinitely as long as it's actively calling
         # tools or receiving API responses.  Only fires when the agent has

@@ -2290,6 +2290,15 @@ class HermesCLI:
         else:
             self.max_turns = 90
         
+        # Max output tokens priority: config file > env var > None (use model default)
+        _cfg_max_tokens = CLI_CONFIG["agent"].get("max_tokens")
+        if _cfg_max_tokens is not None:
+            self.max_tokens = int(_cfg_max_tokens)
+        elif os.getenv("HERMES_MAX_TOKENS"):
+            self.max_tokens = int(os.getenv("HERMES_MAX_TOKENS"))
+        else:
+            self.max_tokens = None
+        
         # Parse and validate toolsets
         self.enabled_toolsets = toolsets
         self.disabled_toolsets = CLI_CONFIG["agent"].get("disabled_toolsets") or []
@@ -3884,6 +3893,7 @@ class HermesCLI:
                 acp_args=runtime.get("args"),
                 credential_pool=runtime.get("credential_pool"),
                 max_iterations=self.max_turns,
+                max_tokens=self.max_tokens,
                 enabled_toolsets=self.enabled_toolsets,
                 disabled_toolsets=self.disabled_toolsets,
                 verbose_logging=self.verbose,
